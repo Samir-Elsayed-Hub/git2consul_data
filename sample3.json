@@ -1,0 +1,43 @@
+{
+  "version": "1.0",
+  "local_store": "/var/lib/git2consul_cache",
+  "logger" : {
+    "name" : "git2consul",
+    "streams" : [{
+      "level": "trace",
+      "stream": "process.stdout"
+    },
+    {
+      "level": "debug",
+      "type": "rotating-file",
+      "path": "/var/log/git2consul/git2consul.log"
+    }]
+  },
+  "repos" : [{
+    "name" : "vp_config",
+    "url" : "ssh://stash.mydomain.com/team_configuration_data.git",
+    "include_branch_name" : false,
+    "source_root": "path/in/git/repo",
+    "mountpoint": "nested/root/for/keys",
+    "branches" : ["development", "staging", "production"],
+    "hooks": [{
+      "type" : "stash",
+      "port" : "5050",
+      "url" : "/gitpoke"
+    },
+    {
+      "type" : "polling",
+      "interval" : "1"
+    }]
+  },{
+    "name" : "github_data",
+    "expand_keys" : true,
+    "url" : "git@github.com:ryanbreen/git2consul_data.git",
+    "branches" : [ "master" ],
+    "hooks": [{
+      "type" : "github",
+      "port" : "5151",
+      "url" : "/gitpoke"
+    }]
+  }]
+}
